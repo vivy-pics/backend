@@ -1,0 +1,31 @@
+{
+	"compilerOptions": {
+		"outDir": "dist",
+
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"target": "esnext",
+		"lib": ["esnext"],
+		"esModuleInterop": true,
+
+		"strict": true,
+		"sourceMap": true,
+		"noImplicitReturns": true,
+
+		"paths": {
+			"~*": ["./src/*"]
+		},
+		"plugins": [
+			{
+				"transform": "typescript-transform-paths"
+			}
+		],
+
+		"downlevelIteration": true
+	},
+	"include": ["src/"],
+	"ts-node": {
+		"files": true,
+		"compiler": "ttypescript"
+	}
+}

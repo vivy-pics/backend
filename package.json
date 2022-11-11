@@ -1,0 +1,53 @@
+{
+	"name": "api",
+	"version": "1.0.0",
+	"main": "dist/index.js",
+	"repository": "https://github.com/KitsuneTV/API",
+	"author": "Kitsune",
+	"private": true,
+	"scripts": {
+		"clean": "rimraf dist/",
+		"lint": "eslint .",
+		"generate": "npx @edgedb/generate edgeql-js",
+		"compile": "ttsc",
+		"run": "node dist/index.js",
+		"migrate": "edgedb migrate",
+		"build": "run-s clean lint compile",
+		"dev": "run-s build run"
+	},
+	"devDependencies": {
+		"@edgedb/generate": "^0.0.4",
+		"@types/node": "^17.0.35",
+		"@types/source-map-support": "^0.5.4",
+		"@typescript-eslint/eslint-plugin": "^5.26.0",
+		"@typescript-eslint/parser": "^5.26.0",
+		"eslint": "^8.16.0",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-config-airbnb-typescript": "^17.0.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-eslint-comments": "^3.2.0",
+		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-promise": "^6.0.0",
+		"eslint-plugin-unicorn": "^42.0.0",
+		"npm-run-all": "^4.1.5",
+		"prettier": "^2.6.2",
+		"rimraf": "^3.0.2",
+		"ts-node": "^10.8.0",
+		"ttypescript": "^1.5.13",
+		"typescript": "^4.7.2",
+		"typescript-transform-paths": "^3.3.1"
+	},
+	"dependencies": {
+		"@fastify/type-provider-typebox": "^1.0.0",
+		"@sinclair/typebox": "^0.23.5",
+		"argon2": "^0.28.5",
+		"dotenv": "^16.0.1",
+		"edgedb": "^1.0.1",
+		"env-var": "^7.1.1",
+		"fastify": "^4.0.2",
+		"pino": "^7.11.0",
+		"pino-pretty": "^7.6.1",
+		"source-map-support": "^0.5.21"
+	},
+	"packageManager": "yarn@3.2.4"
+}

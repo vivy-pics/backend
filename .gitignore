@@ -1,0 +1,15 @@
+node_modules
+.env
+dist
+
+# must be regenerated
+dbschema/edgedb-js
+
+# no zero-install yarn config
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
