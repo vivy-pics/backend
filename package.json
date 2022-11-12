@@ -8,11 +8,11 @@
 	"scripts": {
 		"clean": "rimraf dist/",
 		"lint": "eslint .",
-		"generate": "npx @edgedb/generate edgeql-js",
+		"generate": "mkdirp src/generated/edgeql && npx @edgedb/generate edgeql-js --output-dir src/generated/edgeql --force-overwrite",
 		"compile": "ttsc",
 		"run": "node dist/index.js",
 		"migrate": "edgedb migrate",
-		"build": "run-s clean lint compile",
+		"build": "run-s clean generate lint compile",
 		"dev": "run-s build run"
 	},
 	"devDependencies": {
@@ -29,6 +29,7 @@
 		"eslint-plugin-import": "^2.26.0",
 		"eslint-plugin-promise": "^6.0.0",
 		"eslint-plugin-unicorn": "^42.0.0",
+		"mkdirp": "^1.0.4",
 		"npm-run-all": "^4.1.5",
 		"prettier": "^2.6.2",
 		"rimraf": "^3.0.2",

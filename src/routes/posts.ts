@@ -8,7 +8,7 @@ const plugin: FastifyPluginAsync = async (fastify, _options) => {
 	const f = fastify.withTypeProvider<TypeBoxTypeProvider>();
 
 	// for the front page, we want to render the newest posts
-	f.get("/new", async (request, reply) => {
+	f.get("/new", async (_request, _reply) => {
 		// we're grabbing the minimum amount of data here to render the front page since it's very minimalist
 		const query = e.select(e.Post, (post) => ({
 			number: true,

@@ -2,4 +2,4 @@ dist
 .eslintrc.js
 node_modules
 
-dbschema/edgeql-js
+src/generated

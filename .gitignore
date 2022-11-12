@@ -2,8 +2,8 @@ node_modules
 .env
 dist
 
-# must be regenerated
-dbschema/edgedb-js
+# all generated code needs to be rebuilt
+src/generated
 
 # no zero-install yarn config
 .pnp.*

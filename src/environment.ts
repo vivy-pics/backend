@@ -13,7 +13,7 @@ try {
 	env.get("LOG_LEVEL").required().asString();
 	env.get("PORT").required().asPortNumber();
 
-	env.get("EDGEDB_DSN").required().asString();
+	env.get("EDGEDB_DSN").asString();
 } catch (error) {
 	logger.fatal(error, "Failed to configure environment");
 
