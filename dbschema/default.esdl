@@ -13,6 +13,11 @@ module default {
 			default := false;
 		}
 
+		# whether or not the post is approved (if not, it will be deleted after a few days)
+		required property approved -> bool {
+			default := false;
+		}
+
 		# the hash of the file to use
 		required property hash -> str {
 			# after a post is submitted, its containing file cannot be changed or updated.
@@ -76,17 +81,26 @@ module default {
 		}
 
 		# their username
-		required property username -> str;
+		required property username -> str {
+			constraint max_len_value(32);
+		};
 		# their e-mail address
 		required property email -> str;
+
 		# mainly here for constraints
+		required property clean_email := str_lower(.email);
 		required property clean_username := str_lower(.username);
 
 		# their password
 		required property password_hash -> str;
 
+		# whether or not the user is verified
+		required property verified -> bool {
+			default := false;
+		}
+
 		# whether or not they're a moderator
-		required property is_moderator -> bool {
+		required property moderator -> bool {
 			default := false;
 		}
 
@@ -100,6 +114,8 @@ module default {
 
 		# enforces unique usernames
 		constraint exclusive on (.clean_username);
+		# enforces unique email
+		constraint exclusive on (.clean_email);
 	}
 
 	type Tag {

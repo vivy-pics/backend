@@ -5,6 +5,7 @@ const plugin: FastifyPluginAsync = async (fastify, _options) => {
 	const f = fastify.withTypeProvider<TypeBoxTypeProvider>();
 
 	await f.register(import("./posts"), { prefix: "/posts" });
+	await f.register(import("./users"), { prefix: "/users" });
 
 	f.get("/", async () => ({
 		pong: true,
