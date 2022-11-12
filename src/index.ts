@@ -3,6 +3,7 @@ import "./environment";
 
 import Fastify from "fastify";
 import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
+import FastifyMultipart from "@fastify/multipart";
 import * as env from "env-var";
 
 import { beforeShutdown } from "~util/before-shutdown";
@@ -19,6 +20,8 @@ const fastify = Fastify({
 }).withTypeProvider<TypeBoxTypeProvider>();
 
 (async () => {
+	await fastify.register(FastifyMultipart);
+
 	await fastify.register(import("./routes"));
 
 	await fastify.listen({

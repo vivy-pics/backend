@@ -14,6 +14,11 @@ try {
 	env.get("PORT").required().asPortNumber();
 
 	env.get("EDGEDB_DSN").asString();
+
+	env.get("S3_ENDPOINT").required().asUrlString();
+	env.get("S3_ACCESS_KEY_ID").required().asString();
+	env.get("S3_SECRET_ACCESS_KEY").required().asString();
+	env.get("S3_BUCKET").required().asString();
 } catch (error) {
 	logger.fatal(error, "Failed to configure environment");
 
