@@ -3,6 +3,7 @@ import "./environment";
 
 import Fastify from "fastify";
 import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
+import FastifyCors from "@fastify/cors";
 import FastifyMultipart from "@fastify/multipart";
 import * as env from "env-var";
 
@@ -20,6 +21,9 @@ const fastify = Fastify({
 }).withTypeProvider<TypeBoxTypeProvider>();
 
 (async () => {
+	await fastify.register(FastifyCors, {
+		origin: true,
+	});
 	await fastify.register(FastifyMultipart);
 
 	await fastify.register(import("./routes"));
