@@ -10,12 +10,17 @@ import sharp from "sharp";
 import { client, e } from "~util/database";
 import { S3 } from "~util/s3";
 import { logger } from "~util/log";
+import { createPost } from "~queries/createPost.edgeql";
 
 const plugin: FastifyPluginAsync = async (fastify, _options) => {
 	const f = fastify.withTypeProvider<TypeBoxTypeProvider>();
 
 	// submitting a new image
 	f.post("/", async (request, reply) => {
+		if (!request.session.user) {
+			return reply.status(401).send({ error: "not authenticated" });
+		}
+
 		const file = await request.file();
 
 		if (!file) {
@@ -53,16 +58,12 @@ const plugin: FastifyPluginAsync = async (fastify, _options) => {
 			// if we get here, then the file already exists
 			// just create a new post pointing to this hash
 
-			await e
-				.insert(e.Post, {
-					hash: processedHash,
-					owner: e.select(e.User, (user) => ({
-						filter_single: e.op(user.number, "=", 1),
-					})),
-				})
-				.run(client);
+			const post = await createPost(client, {
+				hash: processedHash,
+				owner: request.session.user.id,
+			});
 
-			return {};
+			return { number: post.number };
 		} catch (error) {
 			if ((error as AWSError).statusCode !== 404) {
 				logger.error(
@@ -87,7 +88,12 @@ const plugin: FastifyPluginAsync = async (fastify, _options) => {
 			return reply.code(500).send({ error: "S3 error" });
 		}
 
-		return {};
+		const post = await createPost(client, {
+			hash: processedHash,
+			owner: request.session.user.id,
+		});
+
+		return { number: post.number };
 	});
 
 	// for the front page, we want to render the newest posts

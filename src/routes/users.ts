@@ -4,6 +4,7 @@ import type { FastifyPluginAsync } from "fastify";
 
 import { client, e } from "~util/database";
 import { hash } from "~util/hashing";
+import { verifyCaptcha } from "~util/recaptcha";
 
 const plugin: FastifyPluginAsync = async (fastify, _options) => {
 	const f = fastify.withTypeProvider<TypeBoxTypeProvider>();
@@ -41,25 +42,61 @@ const plugin: FastifyPluginAsync = async (fastify, _options) => {
 
 			const passwordHash = await hash(password);
 
-			const user = (await e
+			await e
 				.insert(e.User, {
 					username,
 					password_hash: passwordHash,
 					email,
 				})
-				.run(client)
-				.then((result) =>
-					e
-						.select(e.User, (_) => ({
-							number: true,
-							filter_single: { id: result.id },
-						}))
-						.run(client)
-				))!;
+				.run(client);
 
-			return user;
+			return reply.status(204);
 		}
 	);
+
+	f.post(
+		"/verify",
+		{
+			schema: {
+				body: Type.Object({
+					token: Type.String(),
+					recaptcha: Type.String(),
+				}),
+			},
+		},
+		async (request, reply) => {
+			if (!request.session.user) {
+				return reply.status(401).send({
+					error: "Not logged in.",
+				});
+			}
+
+			if (!(await verifyCaptcha(request.body.recaptcha, request.ip))) {
+				return reply.status(400).send({
+					error: "Recaptcha failed",
+				});
+			}
+
+			return {};
+		}
+	);
+
+	f.get("/me", async (request, reply) => {
+		if (!request.session.user) {
+			return reply.status(401).send({ error: "Not authenticated" });
+		}
+
+		return request.session.user;
+	});
+
+	f.post("/logout", async (request, reply) => {
+		if (!request.session.user) {
+			return reply.status(400).send({ error: "Not logged in" });
+		}
+
+		await request.session.destroy();
+		return reply.status(204);
+	});
 };
 
 export default plugin;

@@ -4,6 +4,7 @@ dist
 
 # all generated code needs to be rebuilt
 src/generated
+*.edgeql.ts
 
 # no zero-install yarn config
 .pnp.*

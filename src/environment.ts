@@ -10,10 +10,18 @@ import { logger } from "~util/log";
 /* eslint-enable import/first */
 
 try {
+	env.get("PRETTY_LOGS").required().asBool();
 	env.get("LOG_LEVEL").required().asString();
 	env.get("PORT").required().asPortNumber();
 
-	env.get("EDGEDB_DSN").asString();
+	if (env.get("SESSION_SECRET").required().asString().length < 32) {
+		throw new Error("SESSION_SECRET must be at least 32 characters long");
+	}
+
+	env.get("SESSION_EXPIRY").required().asIntPositive();
+
+	env.get("EDGEDB_DSN").asUrlString();
+	env.get("REDIS_DSN").required().asUrlString();
 
 	env.get("S3_ENDPOINT").required().asUrlString();
 	env.get("S3_ACCESS_KEY_ID").required().asString();
