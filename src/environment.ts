@@ -27,6 +27,8 @@ try {
 	env.get("S3_ACCESS_KEY_ID").required().asString();
 	env.get("S3_SECRET_ACCESS_KEY").required().asString();
 	env.get("S3_BUCKET").required().asString();
+
+	env.get("TURNSTILE_SECRET_KEY").required().asString();
 } catch (error) {
 	logger.fatal(error, "Failed to configure environment");
 

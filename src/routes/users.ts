@@ -4,7 +4,7 @@ import type { FastifyPluginAsync } from "fastify";
 
 import { client, e } from "~util/database";
 import { hash } from "~util/hashing";
-import { verifyCaptcha } from "~util/recaptcha";
+import { verifyTurnstile } from "~util/turnstile";
 
 const plugin: FastifyPluginAsync = async (fastify, _options) => {
 	const f = fastify.withTypeProvider<TypeBoxTypeProvider>();
@@ -60,20 +60,29 @@ const plugin: FastifyPluginAsync = async (fastify, _options) => {
 			schema: {
 				body: Type.Object({
 					token: Type.String(),
-					recaptcha: Type.String(),
+					turnstile: Type.String(),
 				}),
 			},
 		},
 		async (request, reply) => {
-			if (!request.session.user) {
-				return reply.status(401).send({
-					error: "Not logged in.",
-				});
-			}
+			// if (!request.session.user) {
+			// 	return reply.status(401).send({
+			// 		error: "Not logged in.",
+			// 	});
+			// }
 
-			if (!(await verifyCaptcha(request.body.recaptcha, request.ip))) {
+			const [success, action, token] = await verifyTurnstile(
+				request.body.turnstile,
+				request.ip
+			);
+
+			if (
+				!success ||
+				action !== "email-verification" ||
+				token !== request.body.token
+			) {
 				return reply.status(400).send({
-					error: "Recaptcha failed",
+					error: "Turnstile failed",
 				});
 			}
 
